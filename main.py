@@ -3,6 +3,7 @@ from db.connection import engine, Base
 from starlette.middleware.sessions import SessionMiddleware
 import os
 from routes.auth import auth
+from routes.chat import chat_route
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,7 +29,7 @@ app.add_middleware(
 
 
 app.include_router(auth)
-
+app.include_router(chat_route)
 @app.get("/")
 def test():
     return "server is started"
