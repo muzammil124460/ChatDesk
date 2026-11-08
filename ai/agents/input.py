@@ -26,6 +26,13 @@ AVAILABLE AGENTS:
 3. todo
    - Create and manage todo tasks
 
+4. github
+   - create, read, update, delete repository
+   - create, read, update, close issue
+   - read profile and repositories
+   - read, create, compare commits
+   - create, read, update, merge pull requests
+
 
 
 RULES:

@@ -29,6 +29,7 @@ You can select only from these registered agents:
 
 - gmail
 - notion
+- github
 - calendar
 - research
 - drive

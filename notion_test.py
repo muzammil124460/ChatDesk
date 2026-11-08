@@ -1,30 +1,33 @@
-import os
-import asyncio
-from dotenv import load_dotenv
-from ai.tools.notion.connection import NotionConnection
 
-load_dotenv()
+import asyncio
+
+from ai.tools.github.connection import GitHubConnection
 
 
 async def main():
 
-    token = os.getenv("NOTION_TOKEN")
-
-    if not token:
-        raise ValueError("NOTION_TOKEN not found")
-
-    notion = NotionConnection(token)
+    github = GitHubConnection()
 
     try:
-        result = await notion.request(
+
+        user = await github.request(
             method="GET",
-            endpoint="/users/me"
+            endpoint="/user"
         )
 
-        print(result)
+        print("GitHub Connected Successfully!")
+
+        print("Username:", user["login"])
+        print("Name:", user["name"])
+        print("Profile:", user["html_url"])
+
+    except Exception as e:
+
+        print("GitHub Connection Failed:", e)
 
     finally:
-        await notion.close()
+
+        await github.close()
 
 
 asyncio.run(main())

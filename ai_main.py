@@ -9,8 +9,11 @@ from pydantic_model.agent_contexts import Agent_context
 from fastapi import HTTPException
 from ai.tools.notion.notion_tool import create_notion_tools
 from ai.agents.notion import notion_agent
+from ai.agents.github import github_agent
+
 from dotenv import load_dotenv
-import os
+
+import os 
 load_dotenv()
 
 
@@ -58,6 +61,9 @@ def supervised_node(state):
 
             if task.agent == "notion":
                  return "notion_node"
+            
+            if task.agent == "github":
+                             return "github_node"
 
 
 async def email_node(state, runtime: Runtime[Agent_context]):
@@ -183,6 +189,74 @@ async def notion_node(state,runtime:Runtime[Agent_context]):
           
 
 
+async def github_node(state,runtime:Runtime[Agent_context]):
+      print("github node activated")
+
+      
+      try:
+      
+              response = await github_agent(
+                          token= os.getenv("GITHUB_TOKEN"),
+                          query=state.inputs
+                      )
+
+              
+      
+              updated_tasks = []
+      
+              for task in state.tasks:
+      
+                  if task.task_id == state.current_task:
+      
+                      updated_task = task.model_copy(
+                          update={
+                              "status": "completed",
+                              "result": [str(response)]
+                          }
+                      )
+      
+                      updated_tasks.append(updated_task)
+      
+                  else:
+                      updated_tasks.append(task)
+      
+              return {
+                  "tasks": updated_tasks,
+                  "result": {
+                      "github_agent": response
+                  },
+                  "completed_task": [state.current_task],
+                  "current_task": None
+              }
+
+      except Exception as e:
+
+        print("github node error:", repr(e))
+
+        updated_tasks = []
+
+        for task in state.tasks:
+
+            if task.task_id == state.current_task:
+
+                updated_task = task.model_copy(
+                    update={
+                        "status": "failed",
+                        "error": str(e)
+                    }
+                )
+
+                updated_tasks.append(updated_task)
+
+            else:
+                updated_tasks.append(task)
+
+        return {
+            "tasks": updated_tasks,
+            "failed_task": [state.current_task],
+            "current_task": None
+        }
+     
 
 
 
@@ -206,6 +280,7 @@ builder = StateGraph(
 builder.add_node("input_node",input_node)
 builder.add_node("email_node",email_node)
 builder.add_node("notion_node",notion_node)
+builder.add_node("github_node",github_node)
 
 
 
@@ -213,9 +288,9 @@ builder.add_node("notion_node",notion_node)
 
 builder.add_edge(START,"input_node")
 builder.add_conditional_edges("input_node",supervised_node)
-
 builder.add_edge("email_node",END)
 builder.add_edge("notion_node",END)
+builder.add_edge("github_node",END)
 
 graph = builder.compile()
 
