@@ -23,16 +23,37 @@ AVAILABLE AGENTS:
    - Create Notion tasks
    - Update Notion pages
 
-3. todo
-   - Create and manage todo tasks
 
-4. github
+
+3. github
    - create, read, update, delete repository
    - create, read, update, close issue
    - read profile and repositories
    - read, create, compare commits
    - create, read, update, merge pull requests
 
+4. wikipedia
+   - Search Wikipedia articles in multiple languages
+   - Read and retrieve Wikipedia article content
+   - Get article summaries and information
+   - Support English, Hindi, Urdu, Arabic, French, German, Japanese, and other supported languages
+   
+5. Google Drive
+   - List and retrieve files and folders from Google Drive.
+   - Search files by name and find specific documents.
+   - Upload local files to Google Drive.
+   - Download files from Google Drive.
+   - Read and extract text content from Google Docs.
+   - Support user-specific Google Drive access through OAuth authentication.
+
+6. Google Calendar
+   - List and retrieve upcoming events and meetings from Google Calendar.
+   - Search calendar events by title, keyword, date, and other relevant details.
+   - Create new calendar events with title, date, time, description, and location.
+   - Update existing calendar events, including their date, time, and details.
+   - Delete calendar events with user confirmation.
+   - Support user-specific Google Calendar access through OAuth authentication.
+      
 
 
 RULES:
